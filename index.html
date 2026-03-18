@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全国花火大会マップ</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🎆 全国花火大会マップ</h1>
+    <div class="year-selector">
+      <label for="year-select">年:</label>
+      <select id="year-select"></select>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <section class="filter-section">
+        <h2>エリア</h2>
+        <div id="area-filters" class="filter-buttons"></div>
+      </section>
+
+      <section class="filter-section">
+        <h2>月</h2>
+        <div id="month-filters" class="filter-buttons"></div>
+      </section>
+
+      <section class="filter-section" id="week-section" style="display:none">
+        <h2>週</h2>
+        <div id="week-filters" class="filter-buttons"></div>
+      </section>
+    </aside>
+
+    <main>
+      <div id="map"></div>
+      <div id="map-message" class="map-message" style="display:none"></div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
