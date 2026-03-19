@@ -143,6 +143,41 @@ main {
   text-decoration: underline;
 }
 
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.event-item {
+  background: #0f3460;
+  border: 1px solid #0f3460;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.event-item:hover {
+  background: #1a4a8a;
+  border-color: #ffd700;
+}
+
+.event-item-name {
+  font-weight: bold;
+  color: #ffd700;
+  margin-bottom: 4px;
+}
+
+.event-item-details {
+  color: #b0b0b0;
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
 /* レスポンシブ: モバイル */
 @media (max-width: 768px) {
   .layout {

@@ -4,10 +4,10 @@
 const AREAS = ['全国', '北海道', '東北', '関東', '中部', '近畿', '中国四国', '九州沖縄'];
 
 const MARKER_RADIUS = (scale) => {
-  if (!scale || scale === 0) return 6;
-  if (scale < 5000) return 6;
-  if (scale < 20000) return 10;
-  return 16;
+  if (!scale || scale === 0) return 10;
+  if (scale < 5000) return 14;
+  if (scale < 20000) return 20;
+  return 26;
 };
 
 // ============================================================
@@ -304,6 +304,7 @@ function renderMarkers() {
 
   if (filtered.length === 0) {
     showMapMessage('条件に一致する花火大会がありません');
+    renderEventList([]);
     return;
   }
   hideMapMessage();
@@ -317,6 +318,9 @@ function renderMarkers() {
       fillOpacity: 0.8,
       weight: 2,
     });
+
+    // イベントIDをマーカーに保存
+    circle.eventId = d.id;
 
     const scaleText = d.scale ? d.scale.toLocaleString() + '発' : '不明';
     // URLはhttps://またはhttp://のみ許可（javascript:などを排除）
@@ -335,5 +339,52 @@ function renderMarkers() {
     `;
     circle.bindPopup(popupContent);
     markersLayer.addLayer(circle);
+  });
+
+  renderEventList(filtered);
+}
+
+// ============================================================
+// 花火大会リスト描画
+// ============================================================
+function renderEventList(events) {
+  const container = document.getElementById('event-list');
+  container.innerHTML = '';
+
+  if (events.length === 0) {
+    container.innerHTML = '<div style="color: #b0b0b0; font-size: 0.75rem; text-align: center;">該当する花火大会がありません</div>';
+    return;
+  }
+
+  // 日付順にソート
+  const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date));
+
+  sorted.forEach(event => {
+    const item = document.createElement('div');
+    item.className = 'event-item';
+
+    const scaleText = event.scale ? event.scale.toLocaleString() + '発' : '規模不明';
+
+    item.innerHTML = `
+      <div class="event-item-name">${escapeHtml(event.name)}</div>
+      <div class="event-item-details">
+        📅 ${escapeHtml(event.date)}<br>
+        📍 ${escapeHtml(event.prefecture)}<br>
+        🎆 ${escapeHtml(scaleText)}
+      </div>
+    `;
+
+    // クリックで地図にズーム
+    item.addEventListener('click', () => {
+      map.setView([event.lat, event.lng], 12);
+      // イベントIDでマーカーを探してポップアップを開く
+      markersLayer.eachLayer(layer => {
+        if (layer.eventId === event.id) {
+          layer.openPopup();
+        }
+      });
+    });
+
+    container.appendChild(item);
   });
 }
