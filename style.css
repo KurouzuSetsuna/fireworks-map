@@ -178,6 +178,44 @@ main {
   line-height: 1.4;
 }
 
+/* フッター */
+.main-footer {
+  background: #16213e;
+  border-top: 1px solid #0f3460;
+  padding: 12px 20px;
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: #b0b0b0;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-links a {
+  color: #ffd700;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-links a:hover {
+  color: #ffed4e;
+  text-decoration: underline;
+}
+
+.footer-links .separator {
+  color: #0f3460;
+}
+
 /* レスポンシブ: モバイル */
 @media (max-width: 768px) {
   .layout {
@@ -199,5 +237,9 @@ main {
 
   main {
     height: 60vh;
+  }
+
+  .footer-content {
+    font-size: 0.7rem;
   }
 }

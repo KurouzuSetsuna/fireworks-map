@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お問い合わせ - 全国花火大会マップ</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.8;
+      color: #333;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background: white;
+      min-height: 100vh;
+    }
+
+    header {
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #666;
+    }
+
+    h2 {
+      font-size: 22px;
+      color: #1a1a1a;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    p {
+      margin-bottom: 16px;
+      color: #444;
+    }
+
+    ul {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      color: #444;
+    }
+
+    .contact-box {
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 30px;
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .email-button {
+      display: inline-block;
+      padding: 14px 28px;
+      background: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 10px;
+    }
+
+    .email-button:hover {
+      background: #0052a3;
+    }
+
+    .email-display {
+      font-family: monospace;
+      font-size: 18px;
+      color: #0066cc;
+      margin-top: 15px;
+      padding: 10px;
+      background: white;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .note {
+      background: #fff8e1;
+      border-left: 4px solid #ffa726;
+      padding: 16px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    .note p {
+      margin: 0;
+      color: #5d4037;
+    }
+
+    a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 10px 20px;
+      background: #0066cc;
+      color: white;
+      border-radius: 4px;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      background: #0052a3;
+      text-decoration: none;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .copy-success {
+      display: none;
+      color: #2e7d32;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>お問い合わせ</h1>
+      <p class="subtitle">全国花火大会マップに関するご質問・ご意見</p>
+    </header>
+
+    <main>
+      <p>全国花火大会マップをご利用いただき、ありがとうございます。</p>
+      <p>以下のような内容についてお気軽にお問い合わせください：</p>
+
+      <ul>
+        <li>花火大会情報の誤り・修正依頼</li>
+        <li>サイトの不具合報告</li>
+        <li>機能追加のご提案</li>
+        <li>その他、ご意見・ご感想</li>
+      </ul>
+
+      <div class="note">
+        <p><strong>花火大会の開催情報について：</strong><br>
+        当サイトは公開情報を自動収集しているため、情報が古い場合や誤りがある可能性があります。最新の開催情報は各花火大会の公式サイトでご確認ください。</p>
+      </div>
+
+      <h2>メールでのお問い合わせ</h2>
+
+      <div class="contact-box">
+        <p>下のボタンをクリックすると、メールアドレスが表示されます。</p>
+        <button id="showEmailBtn" class="email-button">メールアドレスを表示</button>
+        <div id="emailDisplay" class="email-display"></div>
+        <div id="copySuccess" class="copy-success">✓ メールアドレスをコピーしました</div>
+      </div>
+
+      <div class="note">
+        <p><strong>お問い合わせ時のお願い：</strong><br>
+        • 件名に「花火マップ: 〇〇について」と記載していただけると助かります<br>
+        • 不具合報告の場合は、ご利用のブラウザ・OS・発生状況をお知らせください</p>
+      </div>
+
+      <h2>プライバシーについて</h2>
+      <p>お問い合わせ内容は対応の目的でのみ使用し、第三者に提供することはありません。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+
+      <h2>よくある質問</h2>
+
+      <h3>Q. 花火大会の情報が間違っています</h3>
+      <p>A. お手数ですが、正しい情報（大会名・開催日・会場・出典URL等）を添えてご連絡ください。</p>
+
+      <h3>Q. 掲載されていない花火大会があります</h3>
+      <p>A. 当サイトは特定の情報源から自動収集しています。掲載されていない花火大会の情報をお知らせいただければ、追加を検討いたします。</p>
+
+      <h3>Q. 地図が表示されません</h3>
+      <p>A. ブラウザのJavaScriptが有効になっているか確認してください。また、一部の広告ブロッカーが地図表示を妨げる場合があります。</p>
+
+      <a href="index.html" class="back-link">トップページに戻る</a>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 全国花火大会マップ | <a href="privacy.html">プライバシーポリシー</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // スパム対策: メールアドレスをJavaScriptで動的に生成
+    (function() {
+      const user = 'kurouzu.setsuna';
+      const domain = 'gmail.com';
+      const email = user + '@' + domain;
+
+      const showBtn = document.getElementById('showEmailBtn');
+      const emailDisplay = document.getElementById('emailDisplay');
+      const copySuccess = document.getElementById('copySuccess');
+
+      showBtn.addEventListener('click', function() {
+        // メールアドレスを表示
+        emailDisplay.textContent = email;
+        emailDisplay.style.display = 'block';
+
+        // ボタンのテキストを変更
+        showBtn.textContent = 'メールを送信';
+        showBtn.onclick = function() {
+          window.location.href = 'mailto:' + email + '?subject=花火マップ: お問い合わせ';
+        };
+
+        // メールアドレスをクリップボードにコピー
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(email).then(function() {
+            copySuccess.style.display = 'block';
+            setTimeout(function() {
+              copySuccess.style.display = 'none';
+            }, 3000);
+          }).catch(function() {
+            // コピー失敗時は何もしない
+          });
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
