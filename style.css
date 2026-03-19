@@ -178,6 +178,13 @@ main {
   line-height: 1.4;
 }
 
+/* 広告セクション */
+.ad-section {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #0f3460;
+}
+
 /* フッター */
 .main-footer {
   background: #16213e;
