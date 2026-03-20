@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   このsitemap.xmlは全国花火大会マップ用のサイトマップです。
-  GitHub Pages URL: https://kurouzusetsuna.github.io/fireworks-map/
+  URL: https://fireworks-map.com/
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -10,7 +10,7 @@
 
   <!-- トップページ（花火大会マップ） -->
   <url>
-    <loc>https://kurouzusetsuna.github.io/fireworks-map/</loc>
+    <loc>https://fireworks-map.com/</loc>
     <lastmod>2026-03-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -18,7 +18,7 @@
 
   <!-- プライバシーポリシー -->
   <url>
-    <loc>https://kurouzusetsuna.github.io/fireworks-map/privacy.html</loc>
+    <loc>https://fireworks-map.com/privacy.html</loc>
     <lastmod>2026-03-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -26,7 +26,7 @@
 
   <!-- お問い合わせ -->
   <url>
-    <loc>https://kurouzusetsuna.github.io/fireworks-map/contact.html</loc>
+    <loc>https://fireworks-map.com/contact.html</loc>
     <lastmod>2026-03-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
