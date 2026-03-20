@@ -11,9 +11,25 @@
   <!-- トップページ（花火大会マップ） -->
   <url>
     <loc>https://kurouzusetsuna.github.io/fireworks-map/</loc>
-    <lastmod>2026-03-18</lastmod>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-03-20</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+
+  <!-- プライバシーポリシー -->
+  <url>
+    <loc>https://kurouzusetsuna.github.io/fireworks-map/privacy.html</loc>
+    <lastmod>2026-03-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- お問い合わせ -->
+  <url>
+    <loc>https://kurouzusetsuna.github.io/fireworks-map/contact.html</loc>
+    <lastmod>2026-03-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 
 </urlset>

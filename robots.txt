@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kurouzusetsuna.github.io/fireworks-map/sitemap.xml

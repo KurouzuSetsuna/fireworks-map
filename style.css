@@ -185,6 +185,19 @@ main {
   border-top: 1px solid #0f3460;
 }
 
+/* フッター上部広告 */
+.footer-ad {
+  background: #16213e;
+  padding: 16px 20px;
+  text-align: center;
+  border-top: 1px solid #0f3460;
+}
+
+/* モバイルアンカー広告 */
+.mobile-anchor-ad {
+  display: none; /* デスクトップでは非表示 */
+}
+
 /* フッター */
 .main-footer {
   background: #16213e;
@@ -248,5 +261,18 @@ main {
 
   .footer-content {
     font-size: 0.7rem;
+  }
+
+  /* モバイルアンカー広告を表示 */
+  .mobile-anchor-ad {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #16213e;
+    border-top: 1px solid #0f3460;
+    padding: 8px;
+    z-index: 9999;
   }
 }
