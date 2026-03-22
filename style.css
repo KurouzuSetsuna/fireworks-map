@@ -47,6 +47,80 @@ header h1 {
   cursor: pointer;
 }
 
+/* 紹介セクション */
+.intro-section {
+  background: #16213e;
+  border-bottom: 1px solid #0f3460;
+}
+
+.intro-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  color: #e0e0e0;
+  line-height: 1.8;
+}
+
+.intro-content h2 {
+  font-size: 1.6rem;
+  color: #ffd700;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #0f3460;
+  padding-bottom: 8px;
+}
+
+.intro-content h3 {
+  font-size: 1.2rem;
+  color: #ffd700;
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+.intro-content p {
+  margin-bottom: 16px;
+  color: #e0e0e0;
+}
+
+.intro-content ul,
+.intro-content ol {
+  margin-left: 24px;
+  margin-bottom: 16px;
+}
+
+.intro-content li {
+  margin-bottom: 8px;
+  color: #e0e0e0;
+}
+
+.intro-content strong {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.intro-content a {
+  color: #ffd700;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.intro-content a:hover {
+  color: #ffed4e;
+  text-decoration: underline;
+}
+
+.info-note {
+  background: rgba(255, 215, 0, 0.1);
+  border-left: 4px solid #ffd700;
+  padding: 16px;
+  margin: 24px 0;
+  border-radius: 4px;
+}
+
+.info-note p {
+  margin: 0;
+  color: #e0e0e0;
+}
+
 .layout {
   display: flex;
   flex: 1;
@@ -238,6 +312,24 @@ main {
 
 /* レスポンシブ: モバイル */
 @media (max-width: 768px) {
+  .intro-content {
+    padding: 24px 16px;
+  }
+
+  .intro-content h2 {
+    font-size: 1.3rem;
+  }
+
+  .intro-content h3 {
+    font-size: 1.1rem;
+    margin-top: 24px;
+  }
+
+  .intro-content ul,
+  .intro-content ol {
+    margin-left: 20px;
+  }
+
   .layout {
     flex-direction: column;
   }
