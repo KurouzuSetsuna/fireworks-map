@@ -90,17 +90,21 @@
   </footer>
 
   <!-- モバイルアンカー広告 -->
-  <div class="mobile-anchor-ad">
+  <div class="mobile-anchor-ad" id="mobile-anchor-ad">
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="ca-pub-7714498305797826"
          data-ad-slot="1688445861"
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
   </div>
+
+  <script>
+    // モバイルの場合のみアンカー広告を初期化
+    if (window.innerWidth <= 768) {
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    }
+  </script>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="app.js"></script>
