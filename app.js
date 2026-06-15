@@ -35,9 +35,7 @@ function parseDate(dateStr) {
 // 状態
 // ============================================================
 let allData = [];
-let availableYears = [];
 let state = {
-  year: null,
   area: '全国',
   prefecture: null,  // null = 全県
   month: null,  // null = 全月
@@ -63,28 +61,16 @@ function initMap() {
 // ============================================================
 // データ読み込み
 // ============================================================
-async function loadAvailableYears() {
+async function loadData() {
   try {
-    const res = await fetch('data/years.json');
-    if (!res.ok) throw new Error('fetch failed');
-    availableYears = await res.json();
-    return true;
-  } catch (e) {
-    console.error('Failed to load years.json:', e);
-    return false;
-  }
-}
-
-async function loadDataForYear(year) {
-  try {
-    const res = await fetch(`data/hanabi-${year}.json`);
+    const res = await fetch('data/hanabi.json');
     if (!res.ok) throw new Error('fetch failed');
     allData = await res.json();
-    return true;
   } catch (e) {
     showMapMessage('データを読み込めませんでした');
     return false;
   }
+  return true;
 }
 
 // ============================================================
@@ -105,27 +91,13 @@ function hideMapMessage() {
 // ============================================================
 async function main() {
   initMap();
+  const ok = await loadData();
+  if (!ok) return;
 
-  // 年度リストを読み込み
-  const yearsOk = await loadAvailableYears();
-  if (!yearsOk) {
-    showMapMessage('データを読み込めませんでした');
-    return;
-  }
-
-  // デフォルト年度を決定（今年があれば今年、なければ最新年）
-  const thisYear = new Date().getFullYear();
-  state.year = availableYears.includes(String(thisYear)) ? thisYear : parseInt(availableYears[availableYears.length - 1]);
-
-  // 選択年度のデータを読み込み
-  const dataOk = await loadDataForYear(state.year);
-  if (!dataOk) return;
-
-  buildYearSelector();
   buildSearchBox();
   buildAreaFilters();
   buildPrefectureFilters();
-  applyDefaultYearMonth();
+  applyDefaultMonth();
   buildMonthFilters();
   buildWeekFilters();
   renderMarkers();
@@ -134,50 +106,13 @@ async function main() {
 document.addEventListener('DOMContentLoaded', main);
 
 // ============================================================
-// 年セレクター
+// デフォルト月
 // ============================================================
-function buildYearSelector() {
-  const sel = document.getElementById('year-select');
-  sel.innerHTML = '';
-  availableYears.forEach(y => {
-    const opt = document.createElement('option');
-    opt.value = y;
-    opt.textContent = y + '年';
-    sel.appendChild(opt);
-  });
-
-  sel.value = state.year;
-
-  sel.addEventListener('change', async () => {
-    const newYear = parseInt(sel.value, 10);
-    if (newYear === state.year) return;
-
-    state.year = newYear;
-    state.month = null;
-    state.week = null;
-    state.prefecture = null;
-
-    // 新しい年度のデータを読み込み
-    const ok = await loadDataForYear(state.year);
-    if (!ok) return;
-
-    applyDefaultYearMonth();
-    buildPrefectureFilters();
-    buildMonthFilters();
-    buildWeekFilters();
-    renderMarkers();
-  });
-}
-
-// ============================================================
-// デフォルト年月
-// ============================================================
-function applyDefaultYearMonth() {
+function applyDefaultMonth() {
   const thisMonth = new Date().getMonth() + 1; // 1-12
-  const yearData = allData.filter(d => parseDate(d.date).year === state.year);
 
   // 今月にデータがあれば今月、なければ次にデータがある月
-  const months = [...new Set(yearData.map(d => parseDate(d.date).month))].sort((a, b) => a - b);
+  const months = [...new Set(allData.map(d => parseDate(d.date).month))].sort((a, b) => a - b);
   if (months.length === 0) {
     state.month = null;
     return;
@@ -185,7 +120,7 @@ function applyDefaultYearMonth() {
   if (months.includes(thisMonth)) {
     state.month = thisMonth;
   } else {
-    // 今月より後で最初の月、なければ最初の月（今月は既にデータなしと確認済みなので > を使う）
+    // 今月より後で最初の月、なければ最初の月
     const future = months.filter(m => m > thisMonth);
     state.month = future.length > 0 ? future[0] : months[0];
   }
@@ -232,10 +167,8 @@ function buildPrefectureFilters() {
   const container = document.getElementById('prefecture-filters');
   container.innerHTML = '';
 
-  // 現在のエリアと年度でフィルタリングされたデータから県を取得
+  // 現在のエリアでフィルタリングされたデータから県を取得
   const areaData = allData.filter(d => {
-    const { year } = parseDate(d.date);
-    if (year !== state.year) return false;
     if (state.area !== '全国' && d.area !== state.area) return false;
     return true;
   });
@@ -276,8 +209,7 @@ function refreshPrefectureButtons() {
 function buildMonthFilters() {
   const container = document.getElementById('month-filters');
   container.innerHTML = '';
-  const yearData = allData.filter(d => parseDate(d.date).year === state.year);
-  const months = [...new Set(yearData.map(d => parseDate(d.date).month))].sort((a, b) => a - b);
+  const months = [...new Set(allData.map(d => parseDate(d.date).month))].sort((a, b) => a - b);
 
   // 「全月」ボタン
   const allBtn = createFilterBtn('全月', state.month === null, () => {
@@ -331,7 +263,7 @@ function buildWeekFilters() {
   }
   section.style.display = 'block';
 
-  const weeks = getWeeksInMonth(state.year, state.month);
+  const weeks = getWeeksInMonth(2026, state.month);
 
   const allBtn = createFilterBtn('全週', state.week === null, () => {
     state.week = null;
@@ -376,7 +308,6 @@ function filterData() {
   return allData.filter(d => {
     const { year, month, day } = parseDate(d.date);
 
-    if (year !== state.year) return false;
     if (state.area !== '全国' && d.area !== state.area) return false;
     if (state.prefecture !== null && d.prefecture !== state.prefecture) return false;
     if (state.month !== null && month !== state.month) return false;
