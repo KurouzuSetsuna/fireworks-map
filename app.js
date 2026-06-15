@@ -122,9 +122,9 @@ function buildYearSelector() {
     sel.appendChild(opt);
   });
 
-  // デフォルト年: 今年があれば今年、なければ最新年
-  const thisYear = new Date().getFullYear();
-  state.year = years.includes(thisYear) ? thisYear : years[years.length - 1];
+  // デフォルト年: 2025年があれば2025年、なければ最新年
+  // 2025年が主要な花火シーズンのため
+  state.year = years.includes(2025) ? 2025 : years[years.length - 1];
   sel.value = state.year;
 
   sel.addEventListener('change', () => {
