@@ -35,6 +35,7 @@ function parseDate(dateStr) {
 // 状態
 // ============================================================
 let allData = [];
+let availableYears = [];
 let state = {
   year: null,
   area: '全国',
@@ -62,16 +63,28 @@ function initMap() {
 // ============================================================
 // データ読み込み
 // ============================================================
-async function loadData() {
+async function loadAvailableYears() {
   try {
-    const res = await fetch('data/hanabi.json');
+    const res = await fetch('data/years.json');
+    if (!res.ok) throw new Error('fetch failed');
+    availableYears = await res.json();
+    return true;
+  } catch (e) {
+    console.error('Failed to load years.json:', e);
+    return false;
+  }
+}
+
+async function loadDataForYear(year) {
+  try {
+    const res = await fetch(`data/hanabi-${year}.json`);
     if (!res.ok) throw new Error('fetch failed');
     allData = await res.json();
+    return true;
   } catch (e) {
     showMapMessage('データを読み込めませんでした');
     return false;
   }
-  return true;
 }
 
 // ============================================================
@@ -92,8 +105,21 @@ function hideMapMessage() {
 // ============================================================
 async function main() {
   initMap();
-  const ok = await loadData();
-  if (!ok) return;
+
+  // 年度リストを読み込み
+  const yearsOk = await loadAvailableYears();
+  if (!yearsOk) {
+    showMapMessage('データを読み込めませんでした');
+    return;
+  }
+
+  // デフォルト年度を決定（今年があれば今年、なければ最新年）
+  const thisYear = new Date().getFullYear();
+  state.year = availableYears.includes(String(thisYear)) ? thisYear : parseInt(availableYears[availableYears.length - 1]);
+
+  // 選択年度のデータを読み込み
+  const dataOk = await loadDataForYear(state.year);
+  if (!dataOk) return;
 
   buildYearSelector();
   buildSearchBox();
@@ -111,27 +137,30 @@ document.addEventListener('DOMContentLoaded', main);
 // 年セレクター
 // ============================================================
 function buildYearSelector() {
-  const years = [...new Set(allData.map(d => parseDate(d.date).year))].sort();
-  if (!years.length) return;
   const sel = document.getElementById('year-select');
   sel.innerHTML = '';
-  years.forEach(y => {
+  availableYears.forEach(y => {
     const opt = document.createElement('option');
     opt.value = y;
     opt.textContent = y + '年';
     sel.appendChild(opt);
   });
 
-  // デフォルト年: 2025年があれば2025年、なければ最新年
-  // 2025年が主要な花火シーズンのため
-  state.year = years.includes(2025) ? 2025 : years[years.length - 1];
   sel.value = state.year;
 
-  sel.addEventListener('change', () => {
-    state.year = parseInt(sel.value, 10);
+  sel.addEventListener('change', async () => {
+    const newYear = parseInt(sel.value, 10);
+    if (newYear === state.year) return;
+
+    state.year = newYear;
     state.month = null;
     state.week = null;
     state.prefecture = null;
+
+    // 新しい年度のデータを読み込み
+    const ok = await loadDataForYear(state.year);
+    if (!ok) return;
+
     applyDefaultYearMonth();
     buildPrefectureFilters();
     buildMonthFilters();
