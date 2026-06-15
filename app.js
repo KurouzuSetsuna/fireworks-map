@@ -38,8 +38,10 @@ let allData = [];
 let state = {
   year: null,
   area: '全国',
+  prefecture: null,  // null = 全県
   month: null,  // null = 全月
   week: null,   // null = 全週
+  searchQuery: '',  // 検索クエリ
 };
 
 let map = null;
@@ -94,7 +96,9 @@ async function main() {
   if (!ok) return;
 
   buildYearSelector();
+  buildSearchBox();
   buildAreaFilters();
+  buildPrefectureFilters();
   applyDefaultYearMonth();
   buildMonthFilters();
   buildWeekFilters();
@@ -127,7 +131,9 @@ function buildYearSelector() {
     state.year = parseInt(sel.value, 10);
     state.month = null;
     state.week = null;
+    state.prefecture = null;
     applyDefaultYearMonth();
+    buildPrefectureFilters();
     buildMonthFilters();
     buildWeekFilters();
     renderMarkers();
@@ -158,6 +164,17 @@ function applyDefaultYearMonth() {
 }
 
 // ============================================================
+// 検索ボックス
+// ============================================================
+function buildSearchBox() {
+  const searchBox = document.getElementById('search-box');
+  searchBox.addEventListener('input', (e) => {
+    state.searchQuery = e.target.value.trim();
+    renderMarkers();
+  });
+}
+
+// ============================================================
 // エリアフィルター
 // ============================================================
 function buildAreaFilters() {
@@ -169,11 +186,58 @@ function buildAreaFilters() {
     btn.textContent = area;
     btn.addEventListener('click', () => {
       state.area = area;
+      state.prefecture = null;  // エリアを変更したら県フィルターをリセット
       document.querySelectorAll('#area-filters .filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      buildPrefectureFilters();
       renderMarkers();
     });
     container.appendChild(btn);
+  });
+}
+
+// ============================================================
+// 都道府県フィルター
+// ============================================================
+function buildPrefectureFilters() {
+  const container = document.getElementById('prefecture-filters');
+  container.innerHTML = '';
+
+  // 現在のエリアと年度でフィルタリングされたデータから県を取得
+  const areaData = allData.filter(d => {
+    const { year } = parseDate(d.date);
+    if (year !== state.year) return false;
+    if (state.area !== '全国' && d.area !== state.area) return false;
+    return true;
+  });
+
+  const prefectures = [...new Set(areaData.map(d => d.prefecture))].sort();
+
+  if (prefectures.length === 0) return;
+
+  // 「全県」ボタン
+  const allBtn = createFilterBtn('全県', state.prefecture === null, () => {
+    state.prefecture = null;
+    refreshPrefectureButtons();
+    renderMarkers();
+  });
+  container.appendChild(allBtn);
+
+  prefectures.forEach(pref => {
+    const btn = createFilterBtn(pref, state.prefecture === pref, () => {
+      state.prefecture = pref;
+      refreshPrefectureButtons();
+      renderMarkers();
+    });
+    btn.dataset.prefecture = pref;
+    container.appendChild(btn);
+  });
+}
+
+function refreshPrefectureButtons() {
+  document.querySelectorAll('#prefecture-filters .filter-btn').forEach(btn => {
+    const pref = btn.dataset.prefecture || null;
+    btn.classList.toggle('active', pref === state.prefecture);
   });
 }
 
@@ -285,11 +349,17 @@ function filterData() {
 
     if (year !== state.year) return false;
     if (state.area !== '全国' && d.area !== state.area) return false;
+    if (state.prefecture !== null && d.prefecture !== state.prefecture) return false;
     if (state.month !== null && month !== state.month) return false;
     if (state.week !== null) {
       const weekStart = (state.week - 1) * 7 + 1;
       const weekEnd = Math.min(weekStart + 6, new Date(year, month, 0).getDate());
       if (day < weekStart || day > weekEnd) return false;
+    }
+    // 検索クエリによるフィルタリング
+    if (state.searchQuery) {
+      const query = state.searchQuery.toLowerCase();
+      if (!d.name.toLowerCase().includes(query)) return false;
     }
     return true;
   });

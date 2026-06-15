@@ -122,6 +122,26 @@ header h1 {
   margin-bottom: 8px;
 }
 
+#search-box {
+  width: 100%;
+  background: #0f3460;
+  color: #e0e0e0;
+  border: 1px solid #ffd700;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+#search-box::placeholder {
+  color: #808080;
+}
+
+#search-box:focus {
+  border-color: #ffed4e;
+}
+
 .filter-buttons {
   display: flex;
   flex-wrap: wrap;
