@@ -32,13 +32,11 @@
     </div>
   </section>
 
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
   <div class="layout">
     <aside class="sidebar">
-      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="フィルター表示切替">
-        <span class="toggle-icon">▼</span>
-        <span class="toggle-text">フィルター</span>
-      </button>
-
+      <h2 class="sidebar-title">フィルター</h2>
       <section class="filter-section">
         <h2>花火名検索</h2>
         <input type="text" id="search-box" placeholder="花火名を入力..." />
@@ -71,6 +69,13 @@
     </aside>
 
     <main>
+      <button class="hamburger-menu" id="hamburger-menu" aria-label="メニューを開く">
+        <span class="hamburger-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
       <div id="map"></div>
       <div id="map-message" class="map-message" style="display:none"></div>
     </main>

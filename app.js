@@ -130,34 +130,54 @@ function hideMapMessage() {
 }
 
 // ============================================================
-// モバイルサイドバートグル
+// ハンバーガーメニュー
 // ============================================================
-function setupMobileSidebarToggle() {
+function setupHamburgerMenu() {
   const sidebar = document.querySelector('.sidebar');
-  const toggleBtn = document.getElementById('sidebar-toggle');
+  const hamburgerBtn = document.getElementById('hamburger-menu');
+  const overlay = document.getElementById('sidebar-overlay');
 
-  if (!sidebar || !toggleBtn) return;
+  if (!sidebar || !hamburgerBtn || !overlay) return;
 
-  // モバイルの場合は初期状態を折りたたみに設定
-  if (window.innerWidth <= 768) {
-    sidebar.classList.add('collapsed');
+  // ハンバーガーボタンのクリック
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = sidebar.classList.contains('open');
+
+    if (isOpen) {
+      closeSidebar();
+    } else {
+      openSidebar();
+    }
+  });
+
+  // オーバーレイのクリックでサイドバーを閉じる
+  overlay.addEventListener('click', () => {
+    closeSidebar();
+  });
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    hamburgerBtn.classList.add('active');
+    overlay.classList.add('active');
   }
 
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    hamburgerBtn.classList.remove('active');
+    overlay.classList.remove('active');
 
-    // トグル後に地図のサイズを再計算
+    // サイドバーを閉じた後に地図のサイズを再計算
     setTimeout(() => {
       if (map) {
         map.invalidateSize();
       }
-    }, 300); // CSS transitionの完了を待つ
-  });
+    }, 300);
+  }
 
-  // リサイズ時にデスクトップならcollapsedを解除
+  // リサイズ時にデスクトップならサイドバーを閉じる
   window.addEventListener('resize', debounce(() => {
     if (window.innerWidth > 768) {
-      sidebar.classList.remove('collapsed');
+      closeSidebar();
     }
   }, 250));
 }
@@ -170,7 +190,7 @@ async function main() {
   showMapMessage('地図を読み込んでいます...');
 
   initMap();
-  setupMobileSidebarToggle();
+  setupHamburgerMenu();
   const ok = await loadData();
   if (!ok) return;
 
@@ -496,6 +516,18 @@ function renderEventList(events) {
           layer.openPopup();
         }
       });
+
+      // モバイルではサイドバーを閉じる
+      if (window.innerWidth <= 768) {
+        const sidebar = document.querySelector('.sidebar');
+        const hamburgerBtn = document.getElementById('hamburger-menu');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (sidebar && hamburgerBtn && overlay) {
+          sidebar.classList.remove('open');
+          hamburgerBtn.classList.remove('active');
+          overlay.classList.remove('active');
+        }
+      }
     });
 
     container.appendChild(item);
