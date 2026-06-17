@@ -31,6 +31,19 @@ function parseDate(dateStr) {
   return { year: parts[0], month: parts[1], day: parts[2] };
 }
 
+/** デバウンス関数 - 連続イベントを制御 */
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
 // ============================================================
 // 状態
 // ============================================================
@@ -50,12 +63,42 @@ let markersLayer = null;
 // 地図初期化
 // ============================================================
 function initMap() {
-  map = L.map('map').setView([36.5, 137.5], 5);
+  map = L.map('map', {
+    // モバイル最適化オプション
+    tap: true,
+    tapTolerance: 15,
+    zoomControl: true,
+    dragging: true,
+    touchZoom: true,
+  }).setView([36.5, 137.5], 5);
+
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 18,
   }).addTo(map);
+
   markersLayer = L.layerGroup().addTo(map);
+
+  // 地図のサイズを再計算（遅延実行でCSS計算完了を待つ）
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 100);
+
+  // リサイズイベントハンドラー（デバウンス付き）
+  window.addEventListener('resize', debounce(() => {
+    if (map) {
+      map.invalidateSize();
+    }
+  }, 250));
+
+  // 画面回転対応（モバイル向け）
+  window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+      if (map) {
+        map.invalidateSize();
+      }
+    }, 100);
+  });
 }
 
 // ============================================================
@@ -87,12 +130,52 @@ function hideMapMessage() {
 }
 
 // ============================================================
+// モバイルサイドバートグル
+// ============================================================
+function setupMobileSidebarToggle() {
+  const sidebar = document.querySelector('.sidebar');
+  const toggleBtn = document.getElementById('sidebar-toggle');
+
+  if (!sidebar || !toggleBtn) return;
+
+  // モバイルの場合は初期状態を折りたたみに設定
+  if (window.innerWidth <= 768) {
+    sidebar.classList.add('collapsed');
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+
+    // トグル後に地図のサイズを再計算
+    setTimeout(() => {
+      if (map) {
+        map.invalidateSize();
+      }
+    }, 300); // CSS transitionの完了を待つ
+  });
+
+  // リサイズ時にデスクトップならcollapsedを解除
+  window.addEventListener('resize', debounce(() => {
+    if (window.innerWidth > 768) {
+      sidebar.classList.remove('collapsed');
+    }
+  }, 250));
+}
+
+// ============================================================
 // エントリーポイント
 // ============================================================
 async function main() {
+  // ローディング状態を表示
+  showMapMessage('地図を読み込んでいます...');
+
   initMap();
+  setupMobileSidebarToggle();
   const ok = await loadData();
   if (!ok) return;
+
+  // データ読み込み完了後、ローディングメッセージを非表示
+  hideMapMessage();
 
   buildSearchBox();
   buildAreaFilters();

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="description" content="全国の花火大会を地図で探せる無料サービス。エリア・開催月で絞り込み、お近くの花火大会を簡単に検索。開催日、場所、規模などの情報を一目で確認できます。">
   <meta name="google-site-verification" content="w8WS27n-ix6cQhRDjbjk8YV1NmMxveEFgSFYYjtuxkE" />
   <meta name="google-adsense-account" content="ca-pub-7714498305797826">
@@ -34,6 +34,11 @@
 
   <div class="layout">
     <aside class="sidebar">
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="フィルター表示切替">
+        <span class="toggle-icon">▼</span>
+        <span class="toggle-text">フィルター</span>
+      </button>
+
       <section class="filter-section">
         <h2>花火名検索</h2>
         <input type="text" id="search-box" placeholder="花火名を入力..." />

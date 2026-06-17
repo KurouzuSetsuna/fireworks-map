@@ -1,3 +1,8 @@
+:root {
+  --header-height: 48px;
+  --intro-height: auto;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -178,6 +183,7 @@ main {
 #map {
   width: 100%;
   height: 100%;
+  touch-action: none; /* タッチ操作の最適化 */
 }
 
 .map-message {
@@ -304,6 +310,11 @@ main {
   color: #0f3460;
 }
 
+/* サイドバートグルボタン（デスクトップでは非表示） */
+.sidebar-toggle {
+  display: none;
+}
+
 /* レスポンシブ: モバイル */
 @media (max-width: 768px) {
   .intro-content {
@@ -315,13 +326,61 @@ main {
     flex-direction: column;
   }
 
+  /* サイドバートグルボタンのスタイル */
+  .sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: #0f3460;
+    color: #ffd700;
+    border: 1px solid #ffd700;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .sidebar-toggle:hover {
+    background: #1a4a8a;
+  }
+
+  .sidebar-toggle:active {
+    transform: scale(0.98);
+  }
+
+  .toggle-icon {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+  }
+
+  /* サイドバーの折りたたみ状態 */
   .sidebar {
     width: 100%;
-    max-height: 40vh;
+    max-height: 30vh;
     overflow-y: auto;
     border-right: none;
     border-bottom: 1px solid #0f3460;
     padding: 12px;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+
+  .sidebar.collapsed {
+    max-height: 50px;
+    overflow: hidden;
+    padding: 12px 12px 0 12px;
+  }
+
+  .sidebar.collapsed .filter-section {
+    display: none;
   }
 
   .filter-section {
@@ -329,7 +388,18 @@ main {
   }
 
   main {
-    height: 60vh;
+    flex: 1;
+    min-height: 300px;
+    padding-bottom: 60px; /* モバイルアンカー広告のスペース確保 */
+  }
+
+  /* Leafletコントロールの位置調整（モバイル） */
+  .leaflet-control-container .leaflet-top {
+    top: 10px;
+  }
+
+  .leaflet-control-container .leaflet-bottom {
+    bottom: 70px; /* アンカー広告を避ける */
   }
 
   .footer-content {
